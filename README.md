@@ -27,12 +27,3 @@ This is a basic Node.js project created as part of a tutorial. It demonstrates h
 
 5. **Output**:
    - You should see the output from the program in your terminal.
-
-## File Explanation
-
-- **myfirst.js**: Contains the Node.js code for this project.
-- **README.md**: Provides instructions and details about this project.
-
----
-
-Feel free to update the content if your project has additional features or instructions. Once you're done, click **Commit changes** on GitHub to save it!
