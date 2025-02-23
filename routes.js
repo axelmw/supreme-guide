@@ -38,7 +38,14 @@ router.post("/tree", (req, res) => {
 
     const newNode = { id: Date.now(), name, children: [] };
 
+    console.log("🌳 Current Tree Structure:", JSON.stringify(communityTree, null, 2));
+
+
     const findAndAddNode = (node, parentId) => {
+        if (!node || !node.id) {
+            return false;
+        }
+    
         console.log(`🔍 Checking node: ${node.name} (ID: ${node.id})`);
     
         if (node.id === parentId) {
@@ -47,12 +54,14 @@ router.post("/tree", (req, res) => {
             return true;
         }
     
-        if (!node.children || node.children.length === 0) {
+        // Ensure node.children exists before using `.some()`
+        if (!Array.isArray(node.children)) {
             return false;
         }
     
         return node.children.some(child => findAndAddNode(child, parentId));
     };
+    
     
 
     if (!communityTree) {
