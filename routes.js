@@ -25,28 +25,44 @@ router.get("/tree/:id", (req, res) => {
 
 // Legg til en ny node
 router.post("/tree", (req, res) => {
-    const { parentId, name } = req.body;  // Get data from request
-  
+    const { parentId, name } = req.body;
+
+    // Ensure parentId and name are provided
     if (!parentId || !name) {
-      return res.status(400).json({ message: "Missing parentId or name" });
+        return res.status(400).json({ message: "Missing parentId or name" });
     }
-  
+
     const newNode = { id: Date.now(), name, children: [] };
-  
+
+    // Ensure that parentId exists before trying to add a node
     const findAndAddNode = (node, parentId) => {
-      if (node.id === parentId) {
-        node.children.push(newNode);
-        return true;
-      }
-      return node.children.some(child => findAndAddNode(child, parentId));
+        if (node.id === parentId) {
+            node.children.push(newNode);
+            return true;
+        }
+
+        // Ensure node.children exists before calling .some()
+        if (!node.children || node.children.length === 0) {
+            return false;
+        }
+
+        return node.children.some(child => findAndAddNode(child, parentId));
     };
-  
-    if (findAndAddNode(communityTree, parentId)) {
-      res.status(201).json(newNode);
-    } else {
-      res.status(400).json({ message: "Parent node not found" });
+
+    // Ensure communityTree is defined before modifying it
+    if (!communityTree) {
+        return res.status(500).json({ message: "Tree structure not initialized" });
     }
-  });
+
+    const success = findAndAddNode(communityTree, parentId);
+
+    if (success) {
+        res.status(201).json(newNode);
+    } else {
+        res.status(400).json({ message: "Parent node not found" });
+    }
+});
+
   
 
 // Oppdater en node
