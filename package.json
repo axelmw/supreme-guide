@@ -1,0 +1,16 @@
+{
+  "name": "supreme-guide",
+  "version": "1.0.0",
+  "description": "This is a basic Node.js project created as part of a tutorial. It demonstrates how to set up a simple Node.js application that outputs a message when run.",
+  "main": "data.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
