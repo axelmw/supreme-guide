@@ -25,23 +25,29 @@ router.get("/tree/:id", (req, res) => {
 
 // Legg til en ny node
 router.post("/tree", (req, res) => {
-  const { parentId, name } = req.body;
-  const newNode = { id: Date.now(), name, children: [] };
-
-  const findAndAddNode = (node, parentId) => {
-    if (node.id === parentId) {
-      node.children.push(newNode);
-      return true;
+    const { parentId, name } = req.body;  // Get data from request
+  
+    if (!parentId || !name) {
+      return res.status(400).json({ message: "Missing parentId or name" });
     }
-    return node.children.some(child => findAndAddNode(child, parentId));
-  };
-
-  if (findAndAddNode(communityTree, parentId)) {
-    res.status(201).json(newNode);
-  } else {
-    res.status(400).json({ message: "Fant ikke foreldre-node" });
-  }
-});
+  
+    const newNode = { id: Date.now(), name, children: [] };
+  
+    const findAndAddNode = (node, parentId) => {
+      if (node.id === parentId) {
+        node.children.push(newNode);
+        return true;
+      }
+      return node.children.some(child => findAndAddNode(child, parentId));
+    };
+  
+    if (findAndAddNode(communityTree, parentId)) {
+      res.status(201).json(newNode);
+    } else {
+      res.status(400).json({ message: "Parent node not found" });
+    }
+  });
+  
 
 // Oppdater en node
 router.put("/tree/:id", (req, res) => {
