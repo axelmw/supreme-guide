@@ -25,23 +25,23 @@ router.get("/tree/:id", (req, res) => {
 
 // Legg til en ny node
 router.post("/tree", (req, res) => {
+    console.log("Received request body:", req.body);  // Log received data
+
     const { parentId, name } = req.body;
 
-    // Ensure parentId and name are provided
     if (!parentId || !name) {
+        console.log("❌ Missing parentId or name!");  // Debugging
         return res.status(400).json({ message: "Missing parentId or name" });
     }
 
     const newNode = { id: Date.now(), name, children: [] };
 
-    // Ensure that parentId exists before trying to add a node
     const findAndAddNode = (node, parentId) => {
         if (node.id === parentId) {
             node.children.push(newNode);
             return true;
         }
 
-        // Ensure node.children exists before calling .some()
         if (!node.children || node.children.length === 0) {
             return false;
         }
@@ -49,7 +49,6 @@ router.post("/tree", (req, res) => {
         return node.children.some(child => findAndAddNode(child, parentId));
     };
 
-    // Ensure communityTree is defined before modifying it
     if (!communityTree) {
         return res.status(500).json({ message: "Tree structure not initialized" });
     }
@@ -59,9 +58,11 @@ router.post("/tree", (req, res) => {
     if (success) {
         res.status(201).json(newNode);
     } else {
+        console.log("❌ Parent node not found!");  // Debugging
         res.status(400).json({ message: "Parent node not found" });
     }
 });
+
 
   
 
