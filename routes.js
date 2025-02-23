@@ -37,17 +37,21 @@ router.post("/tree", (req, res) => {
     const newNode = { id: Date.now(), name, children: [] };
 
     const findAndAddNode = (node, parentId) => {
+        console.log(`🔍 Checking node: ${node.name} (ID: ${node.id})`);
+    
         if (node.id === parentId) {
+            console.log(`✅ Found parent ID: ${parentId}, adding child!`);
             node.children.push(newNode);
             return true;
         }
-
+    
         if (!node.children || node.children.length === 0) {
             return false;
         }
-
+    
         return node.children.some(child => findAndAddNode(child, parentId));
     };
+    
 
     if (!communityTree) {
         return res.status(500).json({ message: "Tree structure not initialized" });
