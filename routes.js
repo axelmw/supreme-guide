@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
-let communityTree = require("./data"); // Importer datastrukturen
+const communityTree = require("./data");
+console.log("🌳 Loaded communityTree:", communityTree); 
+
 
 // Hent hele treet
 router.get("/tree", (req, res) => {
