@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const communityTree = require("./data");
-console.log("🌳 Loaded communityTree:", communityTree); 
+const communityTree = require("./data.js");
+console.log("🌳 Loaded communityTree at startup:", JSON.stringify(communityTree, null, 2));
+
 
 
 // Hent hele treet
