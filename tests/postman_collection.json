@@ -1,0 +1,148 @@
+{
+	"info": {
+		"_postman_id": "2da293e4-316d-4997-bde7-da62e96b60e2",
+		"name": "My API tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39955387"
+	},
+	"item": [
+		{
+			"name": "https://supreme-guide-hect.onrender.com/api/tree/",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://supreme-guide-hect.onrender.com/api/tree/",
+					"protocol": "https",
+					"host": [
+						"supreme-guide-hect",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"api",
+						"tree",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://supreme-guide-hect.onrender.com/api/tree",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"parentId\": 2,\r\n    \"name\": \"New Test Node\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://supreme-guide-hect.onrender.com/api/tree",
+					"protocol": "https",
+					"host": [
+						"supreme-guide-hect",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"api",
+						"tree"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://supreme-guide-hect.onrender.com/api/tree",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Oppdatert Verksted\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://supreme-guide-hect.onrender.com/api/tree/7",
+					"protocol": "https",
+					"host": [
+						"supreme-guide-hect",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"api",
+						"tree",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://supreme-guide-hect.onrender.com/api/tree",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"parentId\": 2,\r\n    \"name\": \"New Test Node\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://supreme-guide-hect.onrender.com/api/tree/1740402704793",
+					"protocol": "https",
+					"host": [
+						"supreme-guide-hect",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"api",
+						"tree",
+						"1740402704793"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
