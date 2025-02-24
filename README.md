@@ -27,3 +27,17 @@ This is a basic Node.js project created as part of a tutorial. It demonstrates h
 
 5. **Output**:
    - You should see the output from the program in your terminal.
+
+# API for Inkluderingsprosjektet
+
+Dette er API-et for å administrere datastrukturen i et tre.  
+API-et støtter CRUD-operasjoner (Create, Read, Update, Delete).  
+
+## 🌍 Live API på Render:
+[https://supreme-guide-hect.onrender.com](https://supreme-guide-hect.onrender.com)
+
+## 📌 API-endepunkter
+- **GET** `/api/tree` - Hent hele treet
+- **POST** `/api/tree` - Legg til en node
+- **PUT** `/api/tree/:id` - Oppdater en node
+- **DELETE** `/api/tree/:id` - Slett en node
