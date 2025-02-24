@@ -96,20 +96,27 @@ router.put("/tree/:id", (req, res) => {
 router.delete("/tree/:id", (req, res) => {
   const id = parseInt(req.params.id);
 
+  console.log(`🗑️  DELETE request received for ID: ${id}`);
+  console.log("🌳 Current Tree Structure:", JSON.stringify(communityTree, null, 2));
+
   const deleteNode = (parent, id) => {
-    const index = parent.children.findIndex(child => child.id === id);
-    if (index !== -1) {
-      parent.children.splice(index, 1);
-      return true;
-    }
-    return parent.children.some(child => deleteNode(child, id));
+      const index = parent.children.findIndex(child => child.id === id);
+      if (index !== -1) {
+          console.log(`✅ Found node ${id}, deleting...`);
+          parent.children.splice(index, 1);
+          return true;
+      }
+      return parent.children.some(child => deleteNode(child, id));
   };
 
-  if (deleteNode(communityTree, { children: [communityTree] })) {
-    res.json({ message: "Node slettet" });
+  if (deleteNode({ children: [communityTree] }, id)) {
+      console.log(`✅ Node ${id} deleted successfully!`);
+      res.json({ message: "Node slettet" });
   } else {
-    res.status(404).json({ message: "Node ikke funnet" });
+      console.log(`❌ Node ${id} not found in tree!`);
+      res.status(404).json({ message: "Node ikke funnet" });
   }
 });
+
 
 module.exports = router;
