@@ -4,13 +4,10 @@ const communityTree = require("./data.js");
 console.log("🌳 Loaded communityTree at startup:", JSON.stringify(communityTree, null, 2));
 
 
-
-// Hent hele treet
 router.get("/tree", (req, res) => {
   res.json(communityTree);
 });
 
-// Hent en spesifikk node basert på ID
 router.get("/tree/:id", (req, res) => {
   const id = parseInt(req.params.id);
   const findNode = (node, id) => {
@@ -26,7 +23,6 @@ router.get("/tree/:id", (req, res) => {
   else res.status(404).json({ message: "Node ikke funnet" });
 });
 
-// Legg til en ny node
 router.post("/tree", (req, res) => {
     console.log("Received request body:", req.body);  // Log received data
 
@@ -55,14 +51,12 @@ router.post("/tree", (req, res) => {
             return true;
         }
     
-        // Ensure node.children exists before using `.some()`
         if (!Array.isArray(node.children)) {
             return false;
         }
     
         return node.children.some(child => findAndAddNode(child, parentId));
     };
-    
     
 
     if (!communityTree) {
@@ -79,10 +73,6 @@ router.post("/tree", (req, res) => {
     }
 });
 
-
-  
-
-// Oppdater en node
 router.put("/tree/:id", (req, res) => {
   const id = parseInt(req.params.id);
   const { name } = req.body;
@@ -102,7 +92,7 @@ router.put("/tree/:id", (req, res) => {
   }
 });
 
-// Slett en node
+
 router.delete("/tree/:id", (req, res) => {
   const id = parseInt(req.params.id);
 
