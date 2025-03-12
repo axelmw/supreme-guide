@@ -1,0 +1,5 @@
+CREATE TABLE nodes (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    parent_id INTEGER REFERENCES nodes(id) ON DELETE CASCADE
+);

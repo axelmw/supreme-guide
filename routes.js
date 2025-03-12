@@ -4,9 +4,34 @@ const communityTree = require("./data.js");
 console.log("🌳 Loaded communityTree at startup:", JSON.stringify(communityTree, null, 2));
 
 
-router.get("/tree", (req, res) => {
-  res.json(communityTree);
+const pool = require("./db"); // Import database connection
+
+router.get("/tree", async (req, res) => {
+  try {
+      const { rows } = await pool.query("SELECT * FROM tree_nodes");
+
+      // Convert flat list into tree structure
+      const nodeMap = {};
+      rows.forEach(node => nodeMap[node.id] = { ...node, children: [] });
+
+      // Attach children to parents
+      const rootNodes = [];
+      rows.forEach(node => {
+          if (node.parent_id === null) {
+              rootNodes.push(nodeMap[node.id]);
+          } else {
+              nodeMap[node.parent_id]?.children.push(nodeMap[node.id]);
+          }
+      });
+
+      res.json(rootNodes); // Send structured tree
+  } catch (error) {
+      console.error("Error fetching tree nodes:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+  }
 });
+
+
 
 router.get("/tree/:id", (req, res) => {
   const id = parseInt(req.params.id);
