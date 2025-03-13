@@ -1,43 +1,43 @@
-# Supreme Guide
+# Supreme Guide - API for Inkluderingsprosjektet
 
-This is a basic Node.js project created as part of a tutorial. It demonstrates how to set up a simple Node.js application that outputs a message when run.
+Dette er et REST API for å administrere en trebasert datastruktur for et inkluderingsprosjekt.  
+API-et støtter full CRUD-funksjonalitet (Create, Read, Update, Delete).
 
-## How to Run the Project
+## Live API på Render:
+🔗 **Base URL:** https://supreme-guide-hect.onrender.com
 
-1. **Install Node.js**:
-   - Make sure Node.js is installed on your computer. You can download it from [Node.js Official Website](https://nodejs.org/).
+## API-endepunkter
 
-2. **Clone the Repository**:
-   - Clone this repository to your local machine:
-     ```bash
-     git clone https://github.com/axelmw/supreme-guide.git
-     ```
+### Hente data:
+- `GET /api/tree` - Henter hele treet.
 
-3. **Navigate to the Project Folder**:
-   - Open a terminal and navigate to the project folder:
-     ```bash
-     cd supreme-guide
-     ```
+### Opprette en node:
+- `POST /api/tree` - Legger til en ny node.
+  - **Body:**
+    ```json
+    {
+      "name": "Ny Node",
+      "parent_id": 1
+    }
+    ```
 
-4. **Run the Application**:
-   - Execute the following command to run the Node.js application:
-     ```bash
-     node myfirst.js
-     ```
+### Oppdatere en node:
+- `PUT /api/tree/:id` - Oppdaterer en eksisterende node.
+  - **Body:**
+    ```json
+    {
+      "name": "Oppdatert navn"
+    }
+    ```
 
-5. **Output**:
-   - You should see the output from the program in your terminal.
+### Slette en node:
+- `DELETE /api/tree/:id` - Sletter en node.
 
-# API for Inkluderingsprosjektet
+---
 
-Dette er API-et for å administrere datastrukturen i et tre.  
-API-et støtter CRUD-operasjoner (Create, Read, Update, Delete).  
+## Hvordan kjøre prosjektet lokalt
+### Installer avhengigheter:
+```sh
+npm install
 
-## 🌍 Live API på Render:
-[https://supreme-guide-hect.onrender.com](https://supreme-guide-hect.onrender.com)
-
-## 📌 API-endepunkter
-- **GET** `/api/tree` - Hent hele treet
-- **POST** `/api/tree` - Legg til en node
-- **PUT** `/api/tree/:id` - Oppdater en node
-- **DELETE** `/api/tree/:id` - Slett en node
+🔐 **Merk:** `.env`-filen inneholder `DATABASE_URL` og må settes opp for at API-et skal koble til databasen riktig.
