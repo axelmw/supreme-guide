@@ -14,10 +14,10 @@ const pgSession = require("connect-pg-simple")(session);
 app.use(
     session({
         store: new pgSession({
-            pool: pool, 
-            tableName: "session", 
+            pool: pool,
+            tableName: "session",
         }),
-        secret: process.env.SESSION_SECRET,
+        secret: process.env.SESSION_SECRET || "fallback_secret",
         resave: false,
         saveUninitialized: false,
         cookie: {
@@ -26,6 +26,7 @@ app.use(
         },
     })
 );
+
 
 app.use(express.json());
 
