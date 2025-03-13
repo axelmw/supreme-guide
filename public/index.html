@@ -51,25 +51,27 @@
         }
 
         async function drawCard() {
-            if (!deckId) {
-                alert("Opprett en kortstokk først!");
-                return;
-            }
-            const res = await fetch(`/temp/deck/${deckId}/card`);
-            const data = await res.json();
+    if (!deckId) {
+        alert("Opprett en kortstokk først!");
+        return;
+    }
+    const res = await fetch(`/temp/deck/${deckId}/card`);
+    const data = await res.json();
 
-            if (data.error) {
-                document.getElementById("output").innerText = `Feil: ${data.error}`;
-            } else {
-                document.getElementById("output").innerText = `Du trakk: ${data.card.value} av ${data.card.suit}`;
+    if (res.status !== 200) {
+        document.getElementById("output").innerText = `⚠️ Feil: ${data.error}`;
+        return;
+    }
 
-                // Legg til et bilde av kortet
-                const img = document.createElement("img");
-                img.src = `https://deckofcardsapi.com/static/img/${data.card.value}${data.card.suit[0].toUpperCase()}.png`;
-                img.alt = `${data.card.value} av ${data.card.suit}`;
-                document.getElementById("card-display").appendChild(img);
-            }
-        }
+    document.getElementById("output").innerText = `Du trakk: ${data.card.value} av ${data.card.suit}`;
+
+    // Legg til et bilde av kortet
+    const img = document.createElement("img");
+    img.src = `https://deckofcardsapi.com/static/img/${data.card.value}${data.card.suit[0].toUpperCase()}.png`;
+    img.alt = `${data.card.value} av ${data.card.suit}`;
+    document.getElementById("card-display").appendChild(img);
+}
+
     </script>
 </body>
 

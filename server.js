@@ -96,7 +96,7 @@ app.post("/temp/deck", (req, res) => {
 app.patch("/temp/deck/shuffle/:deck_id", (req, res) => {
     const deckId = req.params.deck_id;
     if (!decks[deckId]) {
-        return res.status(404).json({ error: "Kortstokken finnes ikke" });
+        return res.status(404).json({ error: `Kortstokken med ID '${deckId}' finnes ikke.` });
     }
     decks[deckId] = decks[deckId].sort(() => Math.random() - 0.5);
     res.json({ message: "Kortstokken er stokket!" });
@@ -106,7 +106,7 @@ app.patch("/temp/deck/shuffle/:deck_id", (req, res) => {
 app.get("/temp/deck/:deck_id", (req, res) => {
     const deckId = req.params.deck_id;
     if (!decks[deckId]) {
-        return res.status(404).json({ error: "Kortstokken finnes ikke" });
+        return res.status(404).json({ error: `Kortstokken med ID '${deckId}' finnes ikke.` });
     }
     res.json({ deck: decks[deckId] });
 });
@@ -115,10 +115,10 @@ app.get("/temp/deck/:deck_id", (req, res) => {
 app.get("/temp/deck/:deck_id/card", (req, res) => {
     const deckId = req.params.deck_id;
     if (!decks[deckId]) {
-        return res.status(404).json({ error: "Kortstokken finnes ikke" });
+        return res.status(404).json({ error: `Kortstokken med ID '${deckId}' finnes ikke.` });
     }
     if (decks[deckId].length === 0) {
-        return res.status(400).json({ error: "Kortstokken er tom!" });
+        return res.status(400).json({ error: "Kortstokken er tom! Du kan ikke trekke flere kort." });
     }
     const card = decks[deckId].pop();
     res.json({ card });
