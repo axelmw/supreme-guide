@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const path = require("path");
 const app = express();
@@ -15,12 +17,12 @@ app.use(
             pool: pool, // PostgreSQL connection
             tableName: "session", // The table we created
         }),
-        secret: "your_secret_key", // Change this to a strong secret
+        secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
         cookie: {
-            secure: process.env.NODE_ENV === "production", // Secure cookies in production
-            maxAge: 1000 * 60 * 60 * 24, // 1 day expiration
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 1000 * 60 * 60 * 24,
         },
     })
 );
@@ -37,7 +39,6 @@ app.use((req, res, next) => {
 const treeRoutes = require("./routes");
 app.use("/api", treeRoutes);
 
-// ✅ Test session endpoint
 app.get("/test-session", (req, res) => {
     if (!req.session.views) {
         req.session.views = 1;
@@ -47,14 +48,11 @@ app.get("/test-session", (req, res) => {
     res.json({ message: `You have visited this page ${req.session.views} times.` });
 });
 
-// ✅ NYE ROUTER (POEM, QUOTE, SUM) STARTER HER:
-
-// 📜 GET /tmp/poem - Returnerer et dikt
+//NYE ROUTER (POEM, QUOTE, SUM) STARTER HER:
 app.get("/tmp/poem", (req, res) => {
     res.send("Roser er røde, fioler er blå, Node.js er gøy, det må du forstå!");
 });
 
-// 💬 GET /tmp/quote - Returnerer et tilfeldig sitat
 const quotes = [
     "The only limit to our realization of tomorrow is our doubts of today. – Franklin D. Roosevelt",
     "Do what you can, with what you have, where you are. – Theodore Roosevelt",
@@ -68,7 +66,6 @@ app.get("/tmp/quote", (req, res) => {
     res.send(quotes[randomIndex]);
 });
 
-// ➕ POST /tmp/sum/:a/:b - Summerer to tall
 app.post("/tmp/sum/:a/:b", (req, res) => {
     const a = parseFloat(req.params.a);
     const b = parseFloat(req.params.b);
@@ -80,19 +77,16 @@ app.post("/tmp/sum/:a/:b", (req, res) => {
     res.json({ sum: a + b });
 });
 
-// ✅ Import and initialize deck functions
+
 const { decks, createDeck } = require("./deck");
 
 // ✅ Kortstokk API - START HER
-
-// 📌 POST /temp/deck - Oppretter en ny kortstokk
 app.post("/temp/deck", (req, res) => {
     const deckId = Math.random().toString(36).substr(2, 8); // Generer en tilfeldig ID
     decks[deckId] = createDeck();
     res.json({ deck_id: deckId });
 });
 
-// 📌 PATCH /temp/deck/shuffle/:deck_id - Stokker kortstokken
 app.patch("/temp/deck/shuffle/:deck_id", (req, res) => {
     const deckId = req.params.deck_id;
     if (!decks[deckId]) {
@@ -102,7 +96,6 @@ app.patch("/temp/deck/shuffle/:deck_id", (req, res) => {
     res.json({ message: "Kortstokken er stokket!" });
 });
 
-// 📌 GET /temp/deck/:deck_id - Henter kortstokken
 app.get("/temp/deck/:deck_id", (req, res) => {
     const deckId = req.params.deck_id;
     if (!decks[deckId]) {
@@ -111,7 +104,6 @@ app.get("/temp/deck/:deck_id", (req, res) => {
     res.json({ deck: decks[deckId] });
 });
 
-// 📌 GET /temp/deck/:deck_id/card - Trekker et kort
 app.get("/temp/deck/:deck_id/card", (req, res) => {
     const deckId = req.params.deck_id;
     if (!decks[deckId]) {
@@ -124,25 +116,22 @@ app.get("/temp/deck/:deck_id/card", (req, res) => {
     res.json({ card });
 });
 
-// ✅ Kortstokk API - SLUTT HER
+// Kortstokk API - SLUTT HER
 
-// Server statiske filer fra "public"-mappen
 app.use(express.static(path.join(__dirname, "public")));
 
-// For alle andre requests, send index.html
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Sjekk databaseforbindelsen før serverstart
 pool.query("SELECT NOW()", (err, res) => {
     if (err) {
-        console.error("❌ Kan ikke koble til databasen!", err);
-        process.exit(1); // Avslutt programmet hvis databasen ikke er tilgjengelig
+        console.error("Kan ikke koble til databasen!", err);
+        process.exit(1);
     } else {
-        console.log("✅ Tilkoblet til databasen:", res.rows[0]);
+        console.log("Tilkoblet til databasen:", res.rows[0]);
         app.listen(PORT, () => {
-            console.log(`🚀 Server kjører på http://localhost:${PORT}`);
+            console.log(`Server kjører på http://localhost:${PORT}`);
         });
     }
 });
