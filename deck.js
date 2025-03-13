@@ -1,10 +1,8 @@
 const suits = ["hearts", "diamonds", "clubs", "spades"];
 const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 
-// Hovedlagring for kortstokker (state på serveren)
 const decks = {};
 
-// Fisher-Yates algoritme for ekte stokking
 function shuffleDeck(deck) {
     for (let i = deck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -19,7 +17,7 @@ function createDeck() {
             deck.push({ suit, value });
         }
     }
-    shuffleDeck(deck); // ✅ Stokker kortene før retur
+    shuffleDeck(deck); 
     return deck;
 }
 

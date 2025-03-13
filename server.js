@@ -3,19 +3,19 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const app = express();
-const pool = require("./db"); // Koble til PostgreSQL
+const pool = require("./db");
 const PORT = process.env.PORT || 3000;
 
-// ✅ Import session dependencies
+
 const session = require("express-session");
 const pgSession = require("connect-pg-simple")(session);
 
-// ✅ Configure session middleware
+
 app.use(
     session({
         store: new pgSession({
-            pool: pool, // PostgreSQL connection
-            tableName: "session", // The table we created
+            pool: pool, 
+            tableName: "session", 
         }),
         secret: process.env.SESSION_SECRET,
         resave: false,
@@ -29,7 +29,7 @@ app.use(
 
 app.use(express.json());
 
-// Middleware for logging
+
 app.use((req, res, next) => {
     console.log(`➡️ [${req.method}] ${req.url}`);
     console.log("📝 Received body:", req.body);
@@ -80,7 +80,7 @@ app.post("/tmp/sum/:a/:b", (req, res) => {
 
 const { decks, createDeck } = require("./deck");
 
-// ✅ Kortstokk API - START HER
+//Kortstokk API - START HER
 app.post("/temp/deck", (req, res) => {
     const deckId = Math.random().toString(36).substr(2, 8); // Generer en tilfeldig ID
     decks[deckId] = createDeck();

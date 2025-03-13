@@ -15,11 +15,11 @@
 </head>
 
 <body>
-    <h1>Velkommen til Kortstokk API 🎴</h1>
+    <h1>Velkommen til Kortstokk API </h1>
 
-    <button onclick="createDeck()">🃏 Lag en ny kortstokk</button>
-    <button onclick="shuffleDeck()">🔀 Stokk kortstokk</button>
-    <button onclick="drawCard()">🎴 Trekk et kort</button>
+    <button onclick="createDeck()">Lag en ny kortstokk</button>
+    <button onclick="shuffleDeck()">Stokk kortstokk</button>
+    <button onclick="drawCard()">Trekk et kort</button>
     <p id="output"></p>
 
     <div id="card-display"></div>
@@ -59,7 +59,7 @@
     const data = await res.json();
 
     if (res.status !== 200) {
-        document.getElementById("output").innerText = `⚠️ Feil: ${data.error}`;
+        document.getElementById("output").innerText = `Feil: ${data.error}`;
         return;
     }
 

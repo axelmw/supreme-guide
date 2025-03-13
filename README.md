@@ -47,4 +47,4 @@ Dette prosjektet inkluderer en mellomvare for å lagre sesjonsdata i PostgreSQL,
 ```sh
 npm install
 
-🔐 **Merk:** `.env`-filen inneholder `DATABASE_URL` og må settes opp for at API-et skal koble til databasen riktig.
+**Merk:** `.env`-filen inneholder `DATABASE_URL` og må settes opp for at API-et skal koble til databasen riktig.
