@@ -1,20 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="no">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Min PWA</title>
+    <title>Kortstokk API</title>
     <link rel="manifest" href="manifest.json">
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #deck-container { margin-top: 20px; }
+        #output { font-size: 18px; margin-top: 10px; }
+        #card-display img { width: 100px; margin: 5px; }
+    </style>
 </head>
 
 <body>
-    <h1>Velkommen til min PWA 🎉</h1>
+    <h1>Velkommen til Kortstokk API 🎴</h1>
+
+    <button onclick="createDeck()">🃏 Lag en ny kortstokk</button>
+    <button onclick="shuffleDeck()">🔀 Stokk kortstokk</button>
+    <button onclick="drawCard()">🎴 Trekk et kort</button>
+    <p id="output"></p>
+
+    <div id="card-display"></div>
+
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
                 .then(() => console.log('Service Worker registrert!'))
                 .catch(err => console.error("Feil ved registrering av SW", err));
+        }
+
+        let deckId = null;
+
+        async function createDeck() {
+            const res = await fetch("/temp/deck", { method: "POST" });
+            const data = await res.json();
+            deckId = data.deck_id;
+            document.getElementById("output").innerText = `Ny kortstokk opprettet: ${deckId}`;
+            document.getElementById("card-display").innerHTML = "";
+        }
+
+        async function shuffleDeck() {
+            if (!deckId) {
+                alert("Opprett en kortstokk først!");
+                return;
+            }
+            await fetch(`/temp/deck/shuffle/${deckId}`, { method: "PATCH" });
+            document.getElementById("output").innerText = "Kortstokken er stokket!";
+        }
+
+        async function drawCard() {
+            if (!deckId) {
+                alert("Opprett en kortstokk først!");
+                return;
+            }
+            const res = await fetch(`/temp/deck/${deckId}/card`);
+            const data = await res.json();
+
+            if (data.error) {
+                document.getElementById("output").innerText = `Feil: ${data.error}`;
+            } else {
+                document.getElementById("output").innerText = `Du trakk: ${data.card.value} av ${data.card.suit}`;
+
+                // Legg til et bilde av kortet
+                const img = document.createElement("img");
+                img.src = `https://deckofcardsapi.com/static/img/${data.card.value}${data.card.suit[0].toUpperCase()}.png`;
+                img.alt = `${data.card.value} av ${data.card.suit}`;
+                document.getElementById("card-display").appendChild(img);
+            }
         }
     </script>
 </body>
