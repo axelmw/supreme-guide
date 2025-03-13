@@ -1,14 +1,9 @@
-require("dotenv").config();
-
 const { Pool } = require("pg");
 require("dotenv").config();
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false, // Allows self-signed certificates
-  },
+    connectionString: process.env.DATABASE_URL.replace("localhost", "127.0.0.1"),
+    ssl: process.env.DATABASE_URL.includes("render.com") ? { rejectUnauthorized: false } : false,
 });
 
 module.exports = pool;
-

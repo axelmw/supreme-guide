@@ -77,50 +77,59 @@ router.post("/tree", async (req, res) => {
 
 
 
-router.put("/tree/:id", (req, res) => {
+router.put("/tree/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   const { name } = req.body;
 
-  const updateNode = (node, id) => {
-    if (node.id === id) {
-      node.name = name;
-      return true;
-    }
-    return node.children.some(child => updateNode(child, id));
-  };
+  if (!name) {
+      return res.status(400).json({ message: "Missing name field" });
+  }
 
-  if (updateNode(communityTree, id)) {
-    res.json({ message: "Node oppdatert" });
-  } else {
-    res.status(404).json({ message: "Node ikke funnet" });
+  try {
+      const result = await pool.query(
+          "UPDATE tree_nodes SET name = $1 WHERE id = $2 RETURNING *",
+          [name, id]
+      );
+
+      if (result.rowCount === 0) {
+          return res.status(404).json({ message: "Node ikke funnet" });
+      }
+
+      res.json({ message: "Node oppdatert", node: result.rows[0] });
+  } catch (error) {
+      console.error("Error updating node:", error);
+      res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
 
-router.delete("/tree/:id", (req, res) => {
+
+router.delete("/tree/:id", async (req, res) => {
   const id = parseInt(req.params.id);
 
-  console.log(`🗑️  DELETE request received for ID: ${id}`);
-  console.log("🌳 Current Tree Structure:", JSON.stringify(communityTree, null, 2));
+  console.log(`🗑️ DELETE request received for ID: ${id}`);
 
-  const deleteNode = (parent, id) => {
-      const index = parent.children.findIndex(child => child.id === id);
-      if (index !== -1) {
-          console.log(`✅ Found node ${id}, deleting...`);
-          parent.children.splice(index, 1);
-          return true;
+  try {
+      // First, check if the node exists
+      const checkNode = await pool.query("SELECT * FROM tree_nodes WHERE id = $1", [id]);
+      
+      if (checkNode.rows.length === 0) {
+          console.log(`❌ Node ${id} not found in the database!`);
+          return res.status(404).json({ message: "Node ikke funnet" });
       }
-      return parent.children.some(child => deleteNode(child, id));
-  };
 
-  if (deleteNode({ children: [communityTree] }, id)) {
-      console.log(`✅ Node ${id} deleted successfully!`);
+      // Delete the node from the database
+      await pool.query("DELETE FROM tree_nodes WHERE id = $1", [id]);
+
+      console.log(`✅ Node ${id} deleted successfully from database!`);
       res.json({ message: "Node slettet" });
-  } else {
-      console.log(`❌ Node ${id} not found in tree!`);
-      res.status(404).json({ message: "Node ikke funnet" });
+
+  } catch (error) {
+      console.error("❌ Error deleting node:", error);
+      res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
 
 
 module.exports = router;
