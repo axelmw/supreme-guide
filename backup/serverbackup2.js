@@ -47,39 +47,6 @@ app.get("/test-session", (req, res) => {
     res.json({ message: `You have visited this page ${req.session.views} times.` });
 });
 
-// ✅ NYE ROUTER (POEM, QUOTE, SUM) STARTER HER:
-
-// 📜 GET /tmp/poem - Returnerer et dikt
-app.get("/tmp/poem", (req, res) => {
-    res.send("Roser er røde, fioler er blå, Node.js er gøy, det må du forstå!");
-});
-
-// 💬 GET /tmp/quote - Returnerer et tilfeldig sitat
-const quotes = [
-    "The only limit to our realization of tomorrow is our doubts of today. – Franklin D. Roosevelt",
-    "Do what you can, with what you have, where you are. – Theodore Roosevelt",
-    "Success is not final, failure is not fatal: it is the courage to continue that counts. – Winston Churchill",
-    "Act as if what you do makes a difference. It does. – William James",
-    "Happiness depends upon ourselves. – Aristotle"
-];
-
-app.get("/tmp/quote", (req, res) => {
-    const randomIndex = Math.floor(Math.random() * quotes.length);
-    res.send(quotes[randomIndex]);
-});
-
-// ➕ POST /tmp/sum/:a/:b - Summerer to tall
-app.post("/tmp/sum/:a/:b", (req, res) => {
-    const a = parseFloat(req.params.a);
-    const b = parseFloat(req.params.b);
-    
-    if (isNaN(a) || isNaN(b)) {
-        return res.status(400).json({ error: "Begge parametrene må være tall" });
-    }
-
-    res.json({ sum: a + b });
-});
-
 // Server statiske filer fra "public"-mappen
 app.use(express.static(path.join(__dirname, "public")));
 
