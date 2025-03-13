@@ -80,52 +80,6 @@ app.post("/tmp/sum/:a/:b", (req, res) => {
     res.json({ sum: a + b });
 });
 
-// ✅ Import and initialize deck functions
-const { decks, createDeck } = require("./deck");
-
-// ✅ Kortstokk API - START HER
-
-// 📌 POST /temp/deck - Oppretter en ny kortstokk
-app.post("/temp/deck", (req, res) => {
-    const deckId = Math.random().toString(36).substr(2, 8); // Generer en tilfeldig ID
-    decks[deckId] = createDeck();
-    res.json({ deck_id: deckId });
-});
-
-// 📌 PATCH /temp/deck/shuffle/:deck_id - Stokker kortstokken
-app.patch("/temp/deck/shuffle/:deck_id", (req, res) => {
-    const deckId = req.params.deck_id;
-    if (!decks[deckId]) {
-        return res.status(404).json({ error: "Kortstokken finnes ikke" });
-    }
-    decks[deckId] = decks[deckId].sort(() => Math.random() - 0.5);
-    res.json({ message: "Kortstokken er stokket!" });
-});
-
-// 📌 GET /temp/deck/:deck_id - Henter kortstokken
-app.get("/temp/deck/:deck_id", (req, res) => {
-    const deckId = req.params.deck_id;
-    if (!decks[deckId]) {
-        return res.status(404).json({ error: "Kortstokken finnes ikke" });
-    }
-    res.json({ deck: decks[deckId] });
-});
-
-// 📌 GET /temp/deck/:deck_id/card - Trekker et kort
-app.get("/temp/deck/:deck_id/card", (req, res) => {
-    const deckId = req.params.deck_id;
-    if (!decks[deckId]) {
-        return res.status(404).json({ error: "Kortstokken finnes ikke" });
-    }
-    if (decks[deckId].length === 0) {
-        return res.status(400).json({ error: "Kortstokken er tom!" });
-    }
-    const card = decks[deckId].pop();
-    res.json({ card });
-});
-
-// ✅ Kortstokk API - SLUTT HER
-
 // Server statiske filer fra "public"-mappen
 app.use(express.static(path.join(__dirname, "public")));
 
