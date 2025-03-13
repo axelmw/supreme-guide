@@ -4,7 +4,14 @@ Dette er et REST API for å administrere en trebasert datastruktur for et inklud
 API-et støtter full CRUD-funksjonalitet (Create, Read, Update, Delete).
 
 ## Live API på Render:
-🔗 **Base URL:** https://supreme-guide-hect.onrender.com
+**Base URL:** https://supreme-guide-hect.onrender.com
+
+## Sessions-mellomvare (session persistence)
+Dette prosjektet inkluderer en mellomvare for å lagre sesjonsdata i PostgreSQL, slik at brukerøkter bevares selv om serveren starter på nytt.
+
+- Bruker `express-session` og `connect-pg-simple` for å lagre sesjonsdata i PostgreSQL.
+- Øktdata lagres i tabellen **`session`** i databasen.
+- Brukersesjoner bevares selv etter en serverrestart.
 
 ## API-endepunkter
 
