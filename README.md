@@ -4,9 +4,13 @@ Dette er et REST API for å administrere en trebasert datastruktur for et inklud
 API-et støtter full CRUD-funksjonalitet (Create, Read, Update, Delete).
 
 ## Live API på Render:
-**Base URL:** https://supreme-guide-hect.onrender.com
+**URL for kortstokk API:** 
+https://supreme-guide-hect.onrender.com
 
-## Sessions-mellomvare (session persistence)
+**URL for PostgreSQL-database trestruktur API:** 
+https://supreme-guide-hect.onrender.com/api/tree
+
+## Sessions-mellomvare (vedvarende økter)
 Dette prosjektet inkluderer en mellomvare for å lagre sesjonsdata i PostgreSQL, slik at brukerøkter bevares selv om serveren starter på nytt.
 
 - Bruker `express-session` og `connect-pg-simple` for å lagre sesjonsdata i PostgreSQL.
@@ -24,7 +28,7 @@ Dette prosjektet inkluderer en mellomvare for å lagre sesjonsdata i PostgreSQL,
     ```json
     {
       "name": "Ny Node",
-      "parent_id": 1
+      "parent_id": 8
     }
     ```
 
@@ -47,4 +51,6 @@ Dette prosjektet inkluderer en mellomvare for å lagre sesjonsdata i PostgreSQL,
 ```sh
 npm install
 
-**Merk:** `.env`-filen inneholder `DATABASE_URL` og må settes opp for at API-et skal koble til databasen riktig.
+**Merk:** `.env`-filen er kun nødvendig for lokal kjøring.  
+API-et kjører allerede på Render, så du kan teste det via live URL-er.  
+Hvis du ønsker å kjøre lokalt, må du bruke din egen PostgreSQL-database og sette opp en `.env`-fil slik:  
