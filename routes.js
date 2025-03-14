@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const { getAllNodes, getNodeById, createNode, updateNode, deleteNode } = require("./models/treeModel");
 
-// Fetch entire tree structure
 router.get("/tree", async (req, res) => {
     try {
         const nodes = await getAllNodes();
@@ -13,7 +12,6 @@ router.get("/tree", async (req, res) => {
     }
 });
 
-// Fetch a single node by ID
 router.get("/tree/:id", async (req, res) => {
     try {
         const node = await getNodeById(req.params.id);
@@ -25,7 +23,6 @@ router.get("/tree/:id", async (req, res) => {
     }
 });
 
-// Create a new node
 router.post("/tree", async (req, res) => {
     try {
         const newNode = await createNode(req.body.name, req.body.parentId);
@@ -36,7 +33,6 @@ router.post("/tree", async (req, res) => {
     }
 });
 
-// Update an existing node
 router.put("/tree/:id", async (req, res) => {
     try {
         const updatedNode = await updateNode(req.params.id, req.body.name);
@@ -48,7 +44,6 @@ router.put("/tree/:id", async (req, res) => {
     }
 });
 
-// Delete a node
 router.delete("/tree/:id", async (req, res) => {
     try {
         await deleteNode(req.params.id);
