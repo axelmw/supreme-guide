@@ -1,131 +1,62 @@
 const express = require("express");
 const router = express.Router();
-const communityTree = require("./data.js");
-console.log("Loaded communityTree at startup:", JSON.stringify(communityTree, null, 2));
+const { getAllNodes, getNodeById, createNode, updateNode, deleteNode } = require("./models/treeModel");
 
-
-const pool = require("./db");
-
+// Fetch entire tree structure
 router.get("/tree", async (req, res) => {
-  try {
-      const { rows } = await pool.query("SELECT * FROM tree_nodes");
-
-      const nodeMap = {};
-      rows.forEach(node => nodeMap[node.id] = { ...node, children: [] });
-
-      const rootNodes = [];
-      rows.forEach(node => {
-          if (node.parent_id === null) {
-              rootNodes.push(nodeMap[node.id]);
-          } else {
-              nodeMap[node.parent_id]?.children.push(nodeMap[node.id]);
-          }
-      });
-
-      res.json(rootNodes); 
-  } catch (error) {
-      console.error("Error fetching tree nodes:", error);
-      res.status(500).json({ message: "Internal Server Error" });
-  }
+    try {
+        const nodes = await getAllNodes();
+        res.json(nodes);
+    } catch (error) {
+        console.error("Error fetching tree nodes:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 });
 
-
-
+// Fetch a single node by ID
 router.get("/tree/:id", async (req, res) => {
-  const id = parseInt(req.params.id);
-  
-  try {
-      const { rows } = await pool.query("SELECT * FROM tree_nodes WHERE id = $1", [id]);
-      
-      if (rows.length === 0) {
-          return res.status(404).json({ message: "Node ikke funnet" });
-      }
-
-      res.json(rows[0]);
-  } catch (error) {
-      console.error("Error fetching node:", error);
-      res.status(500).json({ message: "Database error" });
-  }
+    try {
+        const node = await getNodeById(req.params.id);
+        if (!node) return res.status(404).json({ message: "Node not found" });
+        res.json(node);
+    } catch (error) {
+        console.error("Error fetching node:", error);
+        res.status(500).json({ message: "Database error" });
+    }
 });
 
-
+// Create a new node
 router.post("/tree", async (req, res) => {
-  console.log("Received request body:", req.body);
-
-  const { parentId, name } = req.body;
-
-  if (!name) {
-      console.log("Missing name!");
-      return res.status(400).json({ message: "Missing name" });
-  }
-
-  try {
-      const result = await pool.query(
-          "INSERT INTO tree_nodes (name, parent_id) VALUES ($1, $2) RETURNING *",
-          [name, parentId]
-      );
-
-      console.log("New node added:", result.rows[0]);
-      res.status(201).json(result.rows[0]);
-  } catch (error) {
-      console.error("Error inserting node:", error);
-      res.status(500).json({ message: "Internal Server Error" });
-  }
+    try {
+        const newNode = await createNode(req.body.name, req.body.parentId);
+        res.status(201).json(newNode);
+    } catch (error) {
+        console.error("Error inserting node:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 });
 
-
-
+// Update an existing node
 router.put("/tree/:id", async (req, res) => {
-  const id = parseInt(req.params.id);
-  const { name } = req.body;
-
-  if (!name) {
-      return res.status(400).json({ message: "Missing name field" });
-  }
-
-  try {
-      const result = await pool.query(
-          "UPDATE tree_nodes SET name = $1 WHERE id = $2 RETURNING *",
-          [name, id]
-      );
-
-      if (result.rowCount === 0) {
-          return res.status(404).json({ message: "Node ikke funnet" });
-      }
-
-      res.json({ message: "Node oppdatert", node: result.rows[0] });
-  } catch (error) {
-      console.error("Error updating node:", error);
-      res.status(500).json({ message: "Internal Server Error" });
-  }
+    try {
+        const updatedNode = await updateNode(req.params.id, req.body.name);
+        if (!updatedNode) return res.status(404).json({ message: "Node not found" });
+        res.json(updatedNode);
+    } catch (error) {
+        console.error("Error updating node:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 });
 
-
-
+// Delete a node
 router.delete("/tree/:id", async (req, res) => {
-  const id = parseInt(req.params.id);
-
-  console.log(`DELETE request received for ID: ${id}`);
-
-  try {
-      const checkNode = await pool.query("SELECT * FROM tree_nodes WHERE id = $1", [id]);
-      
-      if (checkNode.rows.length === 0) {
-          console.log(`Node ${id} not found in the database!`);
-          return res.status(404).json({ message: "Node ikke funnet" });
-      }
-
-      await pool.query("DELETE FROM tree_nodes WHERE id = $1", [id]);
-
-      console.log(`Node ${id} deleted successfully from database!`);
-      res.json({ message: "Node slettet" });
-
-  } catch (error) {
-      console.error("Error deleting node:", error);
-      res.status(500).json({ message: "Internal Server Error" });
-  }
+    try {
+        await deleteNode(req.params.id);
+        res.json({ message: "Node deleted" });
+    } catch (error) {
+        console.error("Error deleting node:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 });
-
-
 
 module.exports = router;
